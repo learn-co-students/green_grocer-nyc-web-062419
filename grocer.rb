@@ -27,15 +27,19 @@ def apply_coupons(cart, coupons)
   hash = {}
   cart.each do |key, val|
     coupons.each do |coupon|
+#if key is coupon'd item and val count is >= number of items required by coupon reduce val count by number of items used by coupon.
       if key == coupon[:item] && val[:count] >= coupon[:num]
-        val[:count] = val[:count] - coupon[:num]
+        val[:count] -= coupon[:num]
+#if hash include coupon increment
         if hash["#{key} W/COUPON"]
-          hash["#{key} W/COUPON"][:count] += 1
+          hash["#{key} W/COUPON"][:count] += 2
+#otherwise create this coupon hash         
         else
           hash["#{key} W/COUPON"] = {
-            :price => (coupon[:cost]/2), 
+            :price => (coupon[:cost] / coupon[:num]), 
             :clearance => val[:clearance], 
-            :count => 2}
+            :count => coupon[:num]}
+            
           end
         end
       end
